@@ -1,6 +1,10 @@
 #ifndef SNAKE_HPP
 #define SNAKE_HPP
 #include <iostream>
+#include <string>
+#include <vector>
+
+
 
 class Snake{
 private:
@@ -17,6 +21,10 @@ private:
 			return (this->X == rhs.X) && (this->Y ==rhs.Y);
 		}
 	};
+	struct Player{
+		std::string name;
+		int score;
+	};
 	bool GameOver;
 	char snake_head;
 	int button;
@@ -27,6 +35,8 @@ private:
 	int speed;
 	int size;
 	int x, y;
+	int MaxScore;
+	std::vector<Player> rating;
 	direction dir;
 	Position tail[600];
 	Position current;
@@ -46,6 +56,9 @@ private:
 	void start_game();
 	void update_score();
 	void change_difficulty();
+	int getMaxScore();
+	void showRating();
+	void saveNewRecord();
 	
 public:
 	Snake();
