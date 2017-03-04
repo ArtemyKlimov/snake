@@ -23,6 +23,7 @@ private:
 	int length;
 	int n,e; ////????
 	int score;
+	int difficulty;
 	int speed;
 	int size;
 	int x, y;
@@ -43,6 +44,8 @@ private:
 	void clear_tail();
 	void automatic_movement();
 	void start_game();
+	void update_score();
+	void change_difficulty();
 	
 public:
 	Snake();

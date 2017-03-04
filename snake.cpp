@@ -6,7 +6,8 @@
 #include <cstdlib>
 #include <stdio.h>
 
-Snake::Snake(): GameOver(false), length(5),n(1), e(2), score(0), speed(40), size(0), dir(RIGHT){
+Snake::Snake(): GameOver(false), length(5),n(1), e(2), score(0), difficulty(1), size(0), dir(RIGHT){
+					speed = 120/difficulty;
 					current.X = 30;
 					current.Y = 12;
 					food.X = 20;
@@ -27,6 +28,7 @@ void Snake::refresh_values(){
 	GameOver = false;
 	n = 1, e = 2;
 	length = 5;
+	speed = 120/difficulty;
 	dir = RIGHT;
 	current.X = 30;
 	current.Y = 12;
@@ -41,7 +43,8 @@ void Snake::generate_food(){
 		length+=2;
 		setcursor(food.X,food.Y);
 		std::cout<<"@";
-		score+=10;
+		score+=5*difficulty;
+		update_score();
 	}
 	else{
 		setcursor(food.X, food.Y);
@@ -68,7 +71,19 @@ void Snake::clear_screen(){
 		}
 	}
 }
+
+void Snake::update_score(){
+	x = 22; y = 5; setcursor(x,y); std::cout<<score;	
+}
+
 void Snake::draw_border_limits(){
+	x = 1; y = 5; setcursor(x, y); std::cout<<"Your total score is: ";
+	std::cout<<"\t\tDifficulty is: ";
+	switch(difficulty){
+		case 1: std::cout<<"EASY"; break;
+		case 2: std::cout<<"MEDIUM"; break;
+		case 4: std::cout<<"HARD"; break;
+	}
 	x = 1; y = 6; setcursor(x, y); std::cout<<(char)201; //верхний левый угол
 	x = 60; y = 6; setcursor(x, y); std::cout<<(char)187; //верхний правый угол
 	x = 1; y = 25; setcursor(x, y); std::cout<<(char)200; //нижний левый угол
@@ -154,6 +169,7 @@ void Snake::automatic_movement(){
 }
 void Snake::start_game(){
 	draw_border_limits();
+	update_score();
 	while(!GameOver){
 		check_buttons();
 		check_buttons();
@@ -176,7 +192,8 @@ void Snake::start_menu(){
 	CONSOLE_CURSOR_INFO cci = {100, FALSE};
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cci);
 	clear_screen();
-	setcursor(16,12); std::cout<<"Press SPACE to play new game";
+	setcursor(16,10); std::cout<<"Press SPACE to play NEW GAME";
+	setcursor(12,12); std::cout<<"Press BACKSPACE to change difficulty";
 	setcursor(20,14); std::cout<<"Press ENTER to exit";
 		button = (int)getch();
 		if(button == 13){   //enter pressed
@@ -187,5 +204,33 @@ void Snake::start_menu(){
 			refresh_values();
 			start_game();
 		}
+		else if(button == 8){  //backspace pressed
+			clear_screen();
+			change_difficulty();
+		}
 	}		
+}
+
+void Snake::change_difficulty(){
+	setcursor(17,10); std::cout<<"Press 1 to play on easy ";
+	setcursor(14,12); std::cout<<"Press 2 to play on medium mode";
+	setcursor(15,14); std::cout<<"Press 3 to play on hard mode";
+	setcursor(18,16); std::cout<<"Press ENTER to exit";
+	while(true){
+		button = (int)getch();
+		if(button == 49){   //1 pressed
+			difficulty = 1;
+			break;
+		}
+		else if(button == 50){   //2 pressed
+			difficulty = 2;
+			break;
+		}
+		else if(button == 51){  //3 pressed
+			difficulty = 4;
+			break;
+		}
+		else if(button == 13)   //enter pressed
+			break;
+	}
 }
